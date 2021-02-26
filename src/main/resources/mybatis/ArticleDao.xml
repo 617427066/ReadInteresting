@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zstao.mapper.ArticleDao">
+    <resultMap id="BaseArticle" type="com.zstao.entity.Article">
+        <id column="aid" property="aid"/>
+        <result column="title" property="title"/>
+        <result column="a_main" property="aMain" />
+        <result column="user_id" property="userId" />
+        <result column="nickname" property="nickname" />
+        <result column="type_name" property="atypeId" />
+        <result column="view_number" property="viewNumber" />
+        <result column="create_date" property="createDate" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        aid, title, a_main, user_id, atype_id, view_number, create_date,status
+    </sql>
+
+    <select id="findAll" resultMap="BaseArticle">
+        select article.aid,article.title,user.nickname,article.user_id,article.a_main,article_type.type_name,article.create_date,article.status,article.view_number from article
+        join user on user.uid=article.user_id join article_type on article.atype_id=article_type.atype_id
+        order by view_number
+    </select>
+
+
+    <select id="listArticles" parameterType="Integer" resultMap="BaseArticle">
+        select article.aid,article.title,user.nickname,article.user_id,article.a_main,article_type.type_name,article.create_date,article.status,article.view_number from article
+        join user on user.uid=article.user_id join article_type on article.atype_id=article_type.atype_id
+        where article.status=#{status} order by view_number desc limit #{start},#{end}
+    </select>
+
+       <select id="getArticle" parameterType="Integer" resultMap="BaseArticle">
+        select article.aid,article.title,user.nickname,article.user_id,article.a_main,article_type.type_name,article.create_date,article.status,article.view_number  from article
+        join user on user.uid=article.user_id join article_type on article.atype_id=article_type.atype_id
+        where aid=#{aid}
+    </select>
+
+    <select id="listByTitle" parameterType="String" resultMap="BaseArticle">
+        select article.aid,article.title,user.nickname, article_type.type_name,article.create_date,article.status from article
+        join user on user.uid=article.user_id join article_type on article.atype_id=article_type.atype_id
+        where title like concat('%',#{title,jdbcType=VARCHAR},'%') and status=1 order by view_number desc
+    </select>
+
+    <insert id="saveArticle" parameterType="com.zstao.entity.Article">
+        insert into article(title, a_main, user_id, atype_id, view_number, status)
+        values(#{title}, #{aMain}, #{userId}, #{atypeId}, #{viewNumber}, #{status});
+    </insert>
+
+    <delete id="deleteArticle" parameterType="Integer" >
+        delete from article
+        where aid=#{aid}
+    </delete>
+<!--更新文章状态（草稿箱，发表，删除）-->
+    <update id="updateArticle" parameterType="Integer">
+        update article set
+        status=#{status} where aid=#{aid}
+    </update>
+<!--查看文章总数量-->
+    <select id="articleNumber" parameterType="Integer" resultType="Integer">
+        select count(*) from article where status=#{status}
+    </select>
+<!-- 更新查看次数   -->
+    <update id="updateArticleSeeNumber" parameterType="Integer">
+        update article set
+        view_number=#{viewNumber} where aid=#{aid}
+    </update>
+<!--查询谋篇文章的查看次数-->
+    <select id="getArticleViewNumber" parameterType="Integer">
+        select view_number from article where aid=#{aid}
+    </select>
+
+<!-- 查询某个用户发表的文章   -->
+    <select id="listUserArticle" parameterType="Integer">
+        select article.aid,article.title,user.uid, article_type.type_name,article.create_date,article.status from article
+        join user on user.uid=article.user_id join article_type on article.atype_id=article_type.atype_id
+        from article where user_id=#{uid} and status=#{status} order by view_number desc
+    </select>
+    <select id="queryByUser" parameterType="Integer" resultType="Integer">
+        select user_id from article where status=1 GROUP BY user_id ORDER BY view_number desc limit #{start},#{end}
+    </select>
+</mapper>

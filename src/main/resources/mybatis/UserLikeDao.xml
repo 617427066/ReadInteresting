@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zstao.mapper.UserLikeDao">
+    <resultMap id="Base" type="com.zstao.entity.UserLike">
+        <id column="like_id" property="likeId" />
+        <result column="nickname" property="userId"/>
+        <result column="nickname" property="authorId"/>
+        <result column="create_date" property="createDate"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+<!--用户关注的数据-->
+    <select id="listUserLikes" resultMap="Base">
+        select user_like.like_id,user1.nickname as userId,user2.nickname as authorId,user_like.create_date,user_like.status
+        from user_like join user user1 on user1.uid=user_like.user_id join user user2 on user_like.author_id=user2.uid where user_like.status=1
+    </select>
+    
+    <select id="getUserLike" parameterType="Integer" resultMap="Base">
+        select user_like.like_id,user1.nickname as userId,user2.nickname as authorId,user_like.create_date,user_like.status
+        from user_like join user user1 on user1.uid=user_like.user_id join user user2 on user_like.author_id=user2.uid
+        where like_id=#{likeId}
+    </select>
+
+<!--    取消关注的数据-->
+    <select id="listUserNotLikes" resultMap="Base">
+        select user_like.like_id,user1.nickname as userId,user2.nickname as authorId,user_like.create_date,user_like.status
+        from user_like join user user1 on user1.uid=user_like.user_id join user user2 on user_like.author_id=user2.uid where user_like.status=2
+    </select>
+
+    <select id="userLikeNumber" resultType="int">
+        select count(*) from user_like
+    </select>
+
+    <!-- 用户是否关注该用户  -->
+    <select id="queryByUser" resultType="int" resultMap="Base">
+        select * from user_like where user_id=#{user_id} and author_id=#{author_id}
+    </select>
+
+
+
+<!--  关注  -->
+    <insert id="saveUserLike" parameterType="com.zstao.entity.UserLike">
+        insert into user_like(user_id,author_id,status) values(#{userId},#{authorId},#{status})
+    </insert>
+
+    <update id="updateUserLike" parameterType="Integer">
+        update user_like set status=#{status} where like_id=#{likeId}
+    </update>
+
+<!--    用户关注的数量-->
+    <select id="getUserLikeNumber" parameterType="Integer" resultType="int">
+        select count(1) from user_like where user_id=#{userId}
+    </select>
+<!--    用户被关注的数量-->
+    <select id="getUserBeLikeNumber" parameterType="Integer" resultType="int">
+        select count(1) from user_like where author_id=#{authorId}
+    </select>
+<!--    用户关注了哪些人-->
+    <select id="listUserLikeUsers" parameterType="Integer" resultType="String">
+        select user.uname from user_like join user on user.uid=user_like.author_id where user_like.user_id=#{userId}
+    </select>
+
+<!--    用户被哪些人关注-->
+    <select id="listUserBeLikeUsers" parameterType="Integer" resultType="String">
+        select user.uname from user_like join user on user.uid=user_like.user_id where user_like.author_id=#{authorId}
+    </select>
+
+</mapper>

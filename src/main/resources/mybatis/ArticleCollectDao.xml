@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zstao.mapper.ArticleCollectDao">
+    <resultMap id="BaseArticleCollect" type="com.zstao.entity.ArticleCollect">
+        <id column="collect_id" property="collectId"/>
+        <result column="title" property="articleId"/>
+        <result column="create_date" property="createDate"/>
+        <result column="nickname" property="uId"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+<!--    查询所有收藏信息或者取消收藏信息-->
+    <select id="listArticleCollects" resultMap="BaseArticleCollect">
+        select article_collect.collect_id,article.title,user.nickname,article_collect.create_date,article_collect.status
+        from article_collect join article on article_collect.article_id=article.aid join user on article_collect.uid=user.uid
+        where status=#{status}
+    </select>
+<!--查询总数-->
+    <select id="ArticleCollectNumber">
+        select count(*) from article_collect
+    </select>
+<!--    文章被收藏-->
+    <select id="listArticleBeCollects" parameterType="Integer" resultMap="BaseArticleCollect">
+        select article_collect.collect_id,article.title,user.nickname,article_collect.create_date,article_collect.status
+        from article_collect join article on article_collect.article_id=article.aid join user on article_collect.uid=user.uid
+        where article_collect.article_id=#{articleId} and article_collect.status=1
+    </select>
+<!--    用户收藏-->
+    <select id="listUserCollects" parameterType="Integer" resultMap="BaseArticleCollect">
+        select article_collect.collect_id,article.title,user.nickname,article_collect.create_date,article_collect.status
+        from article_collect join article on article_collect.article_id=article.aid join user on article_collect.uid=user.uid
+        where article_collect.uid=#{uid} and article_collect.status=#{status}
+    </select>
+
+<!--    插入-->
+    <insert id="saveArticleCollect" parameterType="com.zstao.entity.ArticleCollect">
+        insert into article_collect(article_id,uid,status)
+        values(#{articleId},#{uId},#{status})
+    </insert>
+<!--    删除-->
+    <delete id="deleteArticleCollect" parameterType="Integer">
+        delete from article_collect
+        where collect_id=#{collectId}
+    </delete>
+<!--    更新，取消收藏-->
+    <update id="updateArticleCollect" parameterType="Integer">
+        update article_collect set
+        status=#{status} where collect_id=#{collectId}
+    </update>
+
+
+</mapper>

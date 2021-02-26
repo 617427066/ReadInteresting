@@ -1,0 +1,132 @@
+.main-article{
+    width: 70%;
+    height: auto;
+    min-height: 200px;
+    margin:20px auto;
+
+}
+.article-left{
+     width: 100%;
+     height: 100%;
+     margin-top: 20px;
+     float: left;
+     /*background: #55a532;*/
+
+ }
+
+.article-title{
+    font-size: 30px;
+    font-weight: 400;
+    letter-spacing:3px;
+    color: #1b1e21c2;
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    padding-left: 20px;
+}
+.article-author-one{
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    padding-left: 20px;
+}
+.author-one-image{
+    float: left;
+    width: 60px;
+    height: 60px;
+}
+.author-name{
+    width: 300px;
+    height: 60px;
+    line-height: 35px;
+    font-size: 15px;
+    color: #1b1c1d;
+    letter-spacing:1px;
+    float: left;
+
+
+}
+.name-name{
+    float: left;
+    width: 300px;
+    height: 35px;
+}
+.guanzhu-one{
+    float: left;
+    width: 40px;
+    height: 20px;
+    font-size: 13px;
+    line-height: 20px;
+    text-align: center;
+    margin-top: 10px;
+    border-radius: 20px;
+    border: 1px solid #f1162b;
+    color: #f1162b;
+}
+.name-list{
+    font-size: 12px;
+    color: #282323eb;
+    line-height: 25px;
+}
+.article-main{
+    margin-top: 20px;
+    font-size: 16px;
+    padding-left: 20px;
+    color: #785656;
+    text-indent:35px;
+
+}
+.userlike{
+    width: 850px;
+    height: 80px;
+    line-height: 50px;
+    color: #1b1e21a3;
+    border-bottom: 1px solid #0c0c0c30;
+}
+.comment-user{
+    width: 100%;
+    height: 200px;
+    margin-top: 40px;
+    margin-left: 20px;
+}
+.article-comment{
+    width: 100%;
+    height: auto;
+    padding-left: 20px;
+}
+.comment-title{
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
+    color: #0c0c0ca8;
+}
+.comment-title .sort:hover{
+    color: #0C0C0C;
+}
+.comment-content{
+    width: 70%;
+    height: auto;
+    min-height: 100px;
+    margin-top: 20px;
+
+}
+.comment-content>ul>li{
+    width: 100%;
+    height: 130px;
+    padding-top: 10px;
+    margin-top: 10px;
+   /* background: #1AA093;*/
+}
+.content-image{
+    width: 60px;
+    height: 100%;
+    float: left;
+    padding-left: 5px;
+    padding-top: 5px;
+}
+.content-right{
+    width: 550px;
+    height: 100%;
+    float: left;
+}

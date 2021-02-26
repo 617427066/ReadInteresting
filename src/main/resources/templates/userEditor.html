@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>写文章</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/iconfont.css">
+    <link rel="stylesheet" href="/css/userEditor.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="/release/wangEditor.min.js"></script>
+    <script src="/js/kindeditor/kindeditor-all.js"></script>
+    <script src="/js/kindeditor/kindeditor.js"></script>
+    <script src="/js/kindeditor/lang/zh-CN.js"></script>
+    <script>
+        $(function(){
+            var editor2;
+            KindEditor.ready(function(K) {
+                editor2 = K.create('textarea[id="content"]', {
+                    uploadJson: '/js/kindeditor/jsp/upload_json.jsp',
+                    fileManagerJson:'/js/kindeditor/jsp/file_manager_json.jsp',
+                    allowImageUpload: true, //上传图片框本地上传的功能，false为隐藏，默认为true
+                    allowImageRemote : false, //上传图片框网络图片的功能，false为隐藏，默认为true
+                    allowFileManager : true, //浏览图片空间
+                    filterMode : false, //HTML特殊代码过滤
+                    afterBlur:function(){
+                        this.sync();
+                    }
+                });
+            });
+
+            $("#articleSave").on("click",function save() {
+                var title=$("#article_title").val()
+
+                var content=$("#content").val()
+
+                if(title==""){
+                    alert("请输入文章标题")
+                    return false;
+                }else if(content==""){
+                    alert("请填写文章内容")
+                    return false;
+                }else{
+                    $.ajax({
+                        url:"http://localhost:8088/addArticle",
+                        data:{
+                            title:title,
+                            content:content
+                        },
+                        type:"post",
+                        dataType:"json",
+                        success:function (e) {
+                            if(e.flag=="success"){
+                                window.location.href="index"
+                            }
+                        }
+                    })
+                }
+
+            })
+
+        })
+        function newArticle() {
+            $(".new-article-list").append(
+            "<div class='list-article-zst'>"+
+                "<span>&nbsp;文&nbsp;章&nbsp;一&nbsp;</span>"+
+            "<div class='iconfont-gongju'>&#xe851;</div>"+
+            "</div>"
+            )
+            $("#article_title").val("文章一")
+        }
+
+    </script>
+</head>
+<body>
+<div class="editor-left">
+    <div class="left-index">
+        <a href="index">回首页</a>
+    </div>
+    <div class="left-writer">随笔</div>
+    <div class="left-setting">
+        <div class="btn-group dropup">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                设置
+            </button>
+            <div class="dropdown-menu">
+                <ul>
+                    <li>帮助与反馈</li>
+                    <li>回收站</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="editor-middle">
+    <div class="new-article"><a href="javascript:;" onclick="newArticle()">新建文章</a></div>
+    <div class="new-article-list">
+
+
+    </div>
+
+</div>
+<div class="editor-right">
+    <div class="editor-title">
+        <div class="article-title" id="articleName">
+            <input type="text" name="article_title" id="article_title" value="">
+        </div>
+        <div class="article-save" id="articleSave">保&nbsp;存</div>
+    </div>
+    <form id="addForm">
+        <div id="editor">
+             <textarea id="content" style="width:750px;height:600px;
+						         		visibility:hidden;display:block; margin-left: 106px;"></textarea>
+        </div>
+
+    </form>
+</div>
+</body>
+<script type="text/javascript">
+  /*  var E = window.wangEditor;
+    var editor = new E('#editor');
+
+    //开启debug模式
+    editor.customConfig.debug = true;
+    // 关闭粘贴内容中的样式
+    editor.customConfig.pasteFilterStyle = false;
+    // 忽略粘贴内容中的图片
+    editor.customConfig.pasteIgnoreImg = true;
+    // 使用 base64 保存图片
+    //editor.customConfig.uploadImgShowBase64 = true
+
+    // 上传图片到服务器
+    editor.customConfig.uploadFileName = 'myfile'; //设置文件上传的参数名称
+    editor.customConfig.uploadImgServer = '/upload/editor/img'; //设置上传文件的服务器路径
+    editor.customConfig.uploadImgMaxSize = 3 * 1024 * 1024; // 将图片大小限制为 3M
+
+
+    //自定义上传图片事件
+    editor.customConfig.uploadImgHooks = {
+        before : function(xhr, editor, files) {
+
+        },
+        success : function(xhr, editor, result) {
+            console.log("上传成功");
+        },
+        fail : function(xhr, editor, result) {
+            console.log("上传失败,原因是"+result);
+        },
+        error : function(xhr, editor) {
+            console.log("上传出错");
+        },
+        timeout : function(xhr, editor) {
+            console.log("上传超时");
+        }
+    };
+    editor.create()*/
+</script>
+</html>

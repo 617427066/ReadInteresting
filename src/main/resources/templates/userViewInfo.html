@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>查看消息</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/iconfont.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/userpersoninfo.css">
+    <link rel="stylesheet" href="/css/userViewInfo.css">
+    <script src="/js/userPersonInfo.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/userSearch.js"></script>
+    <script src="/js/jquery-1.9.1.js"></script>
+    <script src="/js/jquery.validate.js"></script>
+</head>
+<script>
+    $(function(){
+        var query = window.location.search.substring(1);
+        var id = query.substring(3);
+        $("#aid").val(id)
+        $.ajax({
+            url:"http://localhost:8088/indexArticle",
+            data:{
+                id:id,
+            },
+            type:"post",
+            dataType:"json",
+            success:function (e) {
+                if(e.user!=null){
+                    $("#id").val(e.user.uid)
+                    $("#userInfo").css("display","block");
+                    $("#login").css("display","none");
+                    $("#reg").css("display","none");
+                    $("#userimage").attr("src",e.user.userImage);
+                }
+
+
+            }
+        })
+    })
+    //关注页面
+    function guanzhu() {
+        var id=$("#id").val()
+        console.log(id)
+        if(id==""){
+            alert("请登录")
+            return false;
+        }else{
+            window.location.href="userViewLike"
+        }
+    }
+    function suibi() {
+        var id=$("#id").val()
+        console.log(id)
+        if(id==""){
+            alert("请登录")
+            return false;
+        }else{
+            window.location.href="userEditor"
+        }
+
+    }
+    //消息页面
+    function xiaoxi() {
+        var id=$("#id").val()
+        console.log(id)
+        if(id==""){
+            alert("请登录")
+            return false;
+        }else{
+            window.location.href="userViewInfo"
+        }
+    }
+    //退出登录
+    function exit(){
+        $.ajax({
+            url:"http://localhost:8088/userExit",
+            data:{
+
+            },
+            type:"post",
+            dataType:"json",
+            success:function (e) {
+                if(e.code==200){
+                    window.location.href="userLogin"
+                }
+            }
+        })
+    }
+    //搜索
+    function search() {
+        var content=$("#search").val()
+        console.log(123)
+        if(content==""){
+
+        }else{
+            window.location.href="userSearch?id="+content
+        }
+    }
+</script>
+<body>
+//顶部导航栏
+<header class="head-title">
+    <div class="title-log">
+        <span>趣 读</span>
+    </div>
+    <div class="title-middle">
+        <div class="middle-one">
+            <a href="index" class="tab1 cur">首页</a>
+            <a href="javascript:;" onclick="guanzhu()" class="tab1">关注</a>
+            <a href="#" class="tab1 cur">消息</a>
+        </div>
+        <div class="middle-search">
+            <div class="search-form">
+                <form action="">
+                    <input type="text" class="search" name="search" placeholder="搜索">
+                    <a href="userSearch.html">
+                        <span class="iconfont">&#xe613;</span>
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="title-login">
+        <div class="login-one" id="login">
+            <a href="/userLogin" >登陆</a>
+        </div>
+        <div class="login-one" id="reg">
+            <a href="/register">注册</a>
+        </div>
+
+        <div  id="userInfo" class="login-one-info" style="display: none">
+            <div class="user-photo">
+                <img id="userimage" src="/image/photo-default.jpg" alt="">
+                <img src="/image/向下.png" alt="">
+            </div>
+        </div>
+        <div class="login-write">
+            <a href="userEditor.html">随 笔</a>
+        </div>
+    </div>
+</header>
+<div style="clear: both;height: 30px"></div>
+<div>
+    <div class="hidden-userInfo-zst">
+        <a class="dropdown-zst" href="userbolg">
+            <div class="iconfont-userInfo">&#xe60c;</div>
+            我的主页
+        </a>
+        <a class="dropdown-zst" href="userPersonInfo">
+            <div class="iconfont-userInfo">&#xe665;</div>个人信息</a>
+        <a class="dropdown-zst" href="#" onclick="exit()">
+            <div class="iconfont-userInfo">&#xe608;</div>退出登陆</a>
+    </div>
+</div>
+<!--主题-->
+<div class="main-follow">
+    <div class="main-left">
+        <ul>
+            <li class="article-title" style="background: #d1dfdd54;">关注</li>
+            <li class="article-title" >评论</li>
+            <li class="article-title" >其他消息</li>
+
+        </ul>
+    </div>
+    <!--    选项卡-->
+    <div class="main-right">
+        <div class="article-info">
+            <div class="follow-title">全部关注</div>
+            <div class="follow-content">
+                <ul>
+                    <li>
+                        <div class="content-image">
+                            <img src="/image/QQ图片20191119175113.jpg" alt="" style="width: 48px; height: 48px;border-radius: 50%">
+                        </div>
+                        <div class="content-content">
+                            <div class="content-title">
+                                <span>收纳空白。</span>
+                                <span style="font-size: 14px; color: #0c5460;margin-left: 300px;">2020-04-23 12:13:23</span>
+                            </div>
+                            <div class="content-main">
+                                恭喜你成为趣读的一员！
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="content-image">
+                            <img src="/image/QQ图片20191119175113.jpg" alt="" style="width: 48px; height: 48px;border-radius: 50%">
+                        </div>
+                        <div class="content-content">
+                            <div class="content-title">
+                                <span>收纳空白。</span>
+                                <span style="font-size: 14px; color: #0c5460;margin-left: 300px;">2020-04-23 12:13:23</span>
+                            </div>
+                            <div class="content-main">
+                                恭喜你成为趣读的一员！
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="article-info" style="display: none">
+            <div class="follow-title">所有的评论</div>
+            <div class="follow-content">
+                <ul>
+                    <li>
+                        <div class="content-image">
+                            <img src="/image/QQ图片20191119175113.jpg" alt="" style="width: 48px; height: 48px;border-radius: 50%">
+                        </div>
+                        <div class="content-content">
+                            <div class="content-title">
+                                <span>收纳空白。</span>
+                                <span style="font-size: 14px; color: #0c5460;margin-left: 300px;">2020-04-23 12:13:23</span>
+                            </div>
+                            <div class="content-main">
+                                真好啊！
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="article-info" style="display: none">
+            <div class="follow-title">其他提醒</div>
+            <div class="follow-content">
+                <ul>
+                    <li>
+                        <div class="content-image">
+                            <img src="/image/QQ图片20191119175113.jpg" alt="" style="width: 48px; height: 48px;border-radius: 50%">
+                        </div>
+                        <div class="content-content">
+                            <div class="content-title">
+                                <span>收纳空白。</span>
+                                <span style="font-size: 14px; color: #0c5460;margin-left: 300px;">2020-04-23 12:13:23</span>
+                            </div>
+                            <div class="content-main">
+                                恭喜你成为趣读的一员！
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+<!--结尾-->
+<div class="end-zst">
+    <div class="info-zst-team">
+        <ul>
+            <li>关于我们&nbsp;&nbsp;|</li>
+            <li>联系我们&nbsp;&nbsp;|</li>
+            <li>加入我们&nbsp;&nbsp;|</li>
+            <li>门户网站&nbsp;&nbsp;|</li>
+            <li>关于帮助&nbsp;&nbsp;|</li>
+            <li>进入百度&nbsp;&nbsp;|</li>
+            <li>合作伙伴</li>
+        </ul>
+    </div>
+    <div class="info-zst-intro">
+        <div> ©2019-2020 山西农业大学文理学院信息与计算科学专业 / 趣读 / 晋ICP备20160908508号-1126 /</div>
+        <div>联系电话：15735342829 | WeChat:zstzs971126 像热爱生活一样热爱你</div>
+        <div>感谢大学四年老师们对我的教诲，感谢同学们对我的关怀。</div>
+        <div>起风了，唯有努力生存！</div>
+    </div>
+</div>
+</body>
+</html>

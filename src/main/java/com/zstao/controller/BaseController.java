@@ -1,0 +1,33 @@
+package com.zstao.controller;
+
+
+import com.zstao.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
+import java.util.HashMap;
+import java.util.Map;
+@Controller
+public class BaseController {
+    /* 数据存储 */
+    protected Map<String, Object> info = new HashMap<String, Object>();
+
+    @Autowired
+    protected UserService usi;
+    @Autowired
+    protected UserRoleService userRoleService;
+    @Autowired
+    protected ArticleTypeService articleTypeService;
+    @Autowired
+    protected CommentService commentService;
+    @Autowired
+    protected ArticleCollectService articleCollectService;
+    @Autowired
+    protected ArticleService articleService;
+    @Autowired
+    protected RoleService roleService;
+    @Autowired
+    protected UserLikeService userLikeService;
+    @Autowired
+    protected SchoolService schoolService;
+}

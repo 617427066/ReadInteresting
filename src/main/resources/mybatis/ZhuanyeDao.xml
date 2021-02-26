@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zstao.mapper.ZhuanyeDao">
+    <resultMap id="Base" type="com.zstao.entity.Zhuanye">
+        <id column="id" property="id"/>
+        <result column="sch_id" property="sch_id"/>
+        <result column="name" property="name" />
+        <result column="college" property="sch_name" />
+        <result column="addtime" property="addTime" />
+    </resultMap>
+
+    <select id="findAll" resultMap="Base">
+        select zhuanye.id,zhuanye.sch_id,zhuanye.name,zhuanye.addtime school.coolege join school on school.id=zhuanye.sch_id from zhuanye;
+
+    </select>
+
+    <select id="findOne" parameterType="Integer" resultMap="Base">
+        select zhuanye.id,zhuanye.sch_id,zhuanye.name,zhuanye.addtime school.coolege join school on school.id=zhuanye.sch_id from zhuanye where id=#{id}
+    </select>
+
+    <select id="findBySch" parameterType="String" resultMap="Base">
+        select zhuanye.id,zhuanye.sch_id,zhuanye.name,zhuanye.addtime school.coolege join school on school.id=zhuanye.sch_id from zhuanye where id=#{id}
+    </select>
+
+    <insert id="save" parameterType="com.zstao.entity.Zhuanye">
+        insert into zhuanye(sch_id, name, addtime)
+        values(#{sch_id}, #{name},#{addTime});
+    </insert>
+
+    <delete id="delete" parameterType="Integer" >
+        delete from zhuanye
+        where id=#{id}
+    </delete>
+    <!--更新-->
+    <update id="update" parameterType="com.zstao.entity.Zhuanye">
+        update zhuanye set
+        sch_id=#{shc_id},name=#{name},addtime=#{addTime} where id=#{id}
+    </update>
+
+</mapper>

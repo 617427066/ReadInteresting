@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>查看文章</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/iconfont.css">
+    <link rel="stylesheet" href="/css/userViewArticle.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/userpersoninfo.css">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <script src="/js/userPersonInfo.js"></script>
+    <script src="/js/index.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/jquery-1.9.1.js"></script>
+    <script src="/js/jquery.validate.js"></script>
+    <script src="/js/kindeditor/kindeditor-all.js"></script>
+    <script src="/js/kindeditor/kindeditor.js"></script>
+    <script src="/js/kindeditor/lang/zh-CN.js"></script>
+</head>
+<script>
+    $(function(){
+        var query = window.location.search.substring(1);
+        var id = query.substring(3);
+        $("#aid").val(id)
+        $.ajax({
+            url:"http://localhost:8088/queryArticleadmin",
+            data:{
+                id:id,
+            },
+            type:"post",
+            dataType:"json",
+            success:function (e) {
+                    console.log(e)
+                if(e.user!=null){
+                    $("#id").val(e.user.uid)
+                    $("#userInfo").css("display","block");
+                    $("#login").css("display","none");
+                    $("#reg").css("display","none");
+                    $("#userimage").attr("src",e.user.userImage);
+                }
+                if(e.author!=null){
+                    $("#userImage2").attr("src",e.author.userImage);
+                    $("#nickname").html(e.author.nickname)
+                    $("#title").html(e.article.title)
+                    $("#aid").val(e.article.aid)
+                    var article=e.article.aMain.split("。")
+                    var p=""
+                    for(var i=0;i<article.length;i++){
+                        p+="<p>"+article[i]+"</p>"
+                    }
+                    $("#content").append(p)
+                }
+                if(e.comment!=null){
+                    $("#commentNum").html(comment.length)
+                    var div="";
+                    for(var i=0;i<e.comment.length;i++){
+                        div+="<li>" +
+                            "<div class='content-image'>" +
+                            " <img src='/image/photo-default.jpg' alt='' style='width: 48px; height: 48px;border-radius: 50%;'>" +
+                            "</div>" +
+                            " <div class='content-right'>" +
+                            " <div>" +
+                            "<div style='font-size: 16px; margin-bottom: 10px;margin-top: 5px;'>"+e.comment.userId+"</div>" +
+                            "<div style='font-size: 14px;color: #064b57b8'>2020-04-13 12:23:12</div>" +
+                            " </div>" +
+                            " <div style='width: 100%;height: 80px;padding-top: 15px;border-bottom: 1px solid #0c54603b;font-size: 15px'>" +e.comment.cMain+"</div>" +
+                            "</div>" +
+                            "</li>"
+                    }
+                    $("#comments").append(div)
+                }
+
+            }
+        })
+
+
+    })
+    //关注页面
+    function guanzhu() {
+        var id=$("#id").val()
+        if(id==""){
+            alert("请登录")
+            return false;
+        }else{
+            window.location.href="userViewLike"
+        }
+    }
+
+    function suibi() {
+        var id=$("#id").val()
+        if(id==""){
+            alert("请登录")
+            return false;
+        }else{
+            window.location.href="userEditor"
+        }
+
+    }
+    //消息页面
+    function xiaoxi() {
+        var id=$("#id").val()
+        console.log(id)
+        if(id==""){
+            alert("请登录")
+            return false;
+        }else{
+            window.location.href="userViewInfo"
+        }
+    }
+    //退出登录
+    function exit(){
+        $.ajax({
+            url:"http://localhost:8088/userExit",
+            data:{
+
+            },
+            type:"post",
+            dataType:"json",
+            success:function (e) {
+                if(e.code==200){
+                    window.location.href="userLogin"
+                }
+            }
+        })
+    }
+    //搜索
+    function search() {
+        var content=$("#search").val()
+        console.log(123)
+        if(content==""){
+
+        }else{
+            window.location.href="userSearch?id="+content
+        }
+    }
+
+
+</script>
+<body>
+<!--用户点击页面查看文章-->
+//顶部导航栏
+<header class="head-title">
+    <input type="hidden" id="id">
+    <input type="hidden" id="aid">
+    <div class="title-log">
+        <span>趣 读</span>
+    </div>
+    <div class="title-middle">
+        <div class="middle-one">
+            <a href="index" class="tab1 cur">首页</a>
+            <a href="javascript:;" onclick="guanzhu()" class="tab1">关注</a>
+            <a href="javascript:;" onclick="xiaoxi()" class="tab1">消息</a>
+        </div>
+        <div class="middle-search">
+            <div class="search-form">
+                <form action="">
+                    <input type="text" class="search" name="search" placeholder="搜索">
+                    <a href="userSearch.html">
+                        <span class="iconfont">&#xe613;</span>
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="title-login">
+        <div class="login-one" id="login">
+            <a href="/userLogin" >登陆</a>
+        </div>
+        <div class="login-one" id="reg">
+            <a href="/register">注册</a>
+        </div>
+
+        <div  id="userInfo" class="login-one-info" style="display: none">
+            <div class="user-photo">
+                <img id="userImage2" src="/image/photo-default.jpg" alt="">
+                <img src="/image/向下.png" alt="">
+            </div>
+        </div>
+        <div class="login-write">
+            <a href="">随 笔</a>
+        </div>
+    </div>
+</header>
+<div style="clear: both;height: 30px"></div>
+<div>
+    <div class="hidden-userInfo-zst">
+        <a class="dropdown-zst" href="userbolg">
+            <div class="iconfont-userInfo">&#xe60c;</div>
+            我的主页
+        </a>
+        <a class="dropdown-zst" href="userPersonInfo">
+            <div class="iconfont-userInfo">&#xe665;</div>个人信息</a>
+        <a class="dropdown-zst" href="javascript:;" onclick="exit()">
+            <div class="iconfont-userInfo">&#xe608;</div>退出登陆</a>
+    </div>
+</div>
+<div class="main-article">
+
+    <div class="article-left">
+        <div class="article-title">
+            <span id="title"></span>
+        </div>
+        <div class="article-author-one">
+            <div class="author-one-image">
+                <img id="userImage" src="/image/photo-default.jpg" alt="" style="width: 48px; height: 48px;border-radius: 50%;">
+            </div>
+            <div class="author-name">
+                <div class="name-name"><div id="nickname" style="float:left;">收纳空白。</div><span class="like-one guanzhu-one" onclick="guanzhu()">关注</span></div>
+                <div class="name-list"><span id="shoucang" style="color: #ef1227">100</span> <span id="createTime">&nbsp;&nbsp;2020-04-22 19:08:08</span> <span id="viewNumber">&nbsp;&nbsp;&nbsp;&nbsp;1234</span><span>阅读</span></div>
+            </div>
+        </div>
+        <div class="article-main" id="content">
+         <!--   <form>
+                <textarea id="js2" name="content" style="width:750px;height:200px;visibility:hidden;display: block; margin-left: 30px;">${one.content}</textarea>
+            </form>-->
+            <!-- <p>在家的时候看过《非你莫属》的一期节目中，来了一位24岁的求职者。</p>
+             <p>他说自己具有天生的交际能力，认识很多牛人大佬，包括董明珠、俞敏洪。</p>
+             <p>现场的老板们都表示怀疑，主持人提议：</p>
+             <p>既然你说你是董明珠的朋友，那不如现在给她打个电话，看看她怎么回应。</p>
+             <p>小伙子拿出手机，随即拨通了董明珠的电话。</p>
+             <p>令人尴尬的是，电话那头除了忙音，没有任何人接听，最后小伙只能挂断了电话。</p>
+             <p>主持人三言两语，揭露了这个所谓的“社交达人”的真相：</p>
+             <p>他自以为结识的牛人，实际上根本没有存他的电话，更不可能在他需要的时候给他提供任何的帮助。</p>
+             <p>有时候，你把对方视为你的人脉，人家可不一定这样认为。</p>
+             <p>如果在能力、地位、资源、身份都不对等的情况下，这些所谓的人脉，只是你的一厢情愿而已。</p>
+             <p>看看董明珠女士的朋友圈，几乎都是各领域的大咖。</p>
+             <p>她的四大闺蜜中，有年度经济人物，有前首富的妻子，有传媒界的大佬，还有知名服装企业的董事长。</p>
+             <p>而王健林、雷军等商业名人，更是董明珠的好友。</p><p>斯坦福研究中心曾发表过一份调查报告，结论指出：</p>
+             <p>一个人赚的钱，12.5%来自知识，87.5%来自关系。</p><p>可以说，你所处的圈子，已经暴露了你的阶层、财富状况。</p>
+             <p>人总是在不知不觉中受到自己所在圈子的影响，想要提升人脉竞争力，你需要看懂这6条社交潜规则。</p>
+             <p>01</p><p>无效社交</p><p>之前有一个扎心的社会实验短片，叫《你手机里的常用联系人有几个》。</p>
+             <p>几个参与者的手机里，好友数都在一千以上。</p>
+             <p>随后，节目组要求这些人不考虑工作和应酬，删除掉自己不会联系的人。</p>
+             <p>至此，不少人手机里，只剩下二三十个联系人。</p><p>接下来的问题是：“除了家人，能说真心话的还剩几个人？”</p>
+             <p>2000个联系人，只剩下2个。1000个联系人，只剩下0。</p><p>出题人让他们现场给这些朋友打个电话。</p>
+             <p>电话通了，但对方却挂断了，留下打电话的人满脸失落。</p>
+             <p>生活中，有太多人都把自己的时间、精力浪费在无效社交上。</p>
+             <p>正如《请停止无效社交》一书中写道：</p>
+             <p>“你忙于交际，频于应付，鸡同鸭讲的尴尬无处不在。</p>
+             <p>你为了别人的欢笑而奔波，又为了别人的肯定而牺牲自我，你的人生仿佛都不是你的。</p>
+             <p>其实，你根本不是在社交，而是无谓地蹉跎光阴。”</p>
+             <p>心理学上有个“跷跷板定律”，指的是：人和人之间的关系，就像两人踩跷跷板一样。</p>
+             <p>一旦彼此的交换不对等，那么就会像跷跷板一样失衡。</p>
+             <p>社交的本质其实就是价值的展现和交换，所以与其花时间在无效社交上，不如多花点时间提升自己。</p>
+             <p>只有通过自身价值吸引过来的人脉，才是最稳定的人脉。</p>
+             <p>02</p>
+             <p>互悦机制</p><p>世界著名推销员乔·吉拉德的成功秘诀，就是“让顾客喜欢自己”。</p>
+             <p>为此，他常常做一些在别人看来微不足道的事情，例如，每一个节日，他都会给1.3万名顾客，每人寄去一张问候的卡片。</p>
+             <p>有变化的是，随着不同的节日而更新的卡片内容，不变的是，每张卡片的封面上，永远都写着同一句话：“我喜欢你。”</p>
+             <p>将心比心，我们都希望别人关注、喜欢自己，希望自己在对方心里，是独特、值得牵挂的个体。</p>
+             <p>吉拉德这种做法，看起微不足道，但年复一日坚持下来，却十分不易。</p>
+             <p>也正是这种做法，吉拉德平均每个工作日都能卖掉5辆车，每年的收入都超过20万美元，创下连续12年销售第一名的记录。</p>
+             <p>甚至，吉拉德还以“世界上最了不起的卖车人”的名义，被吉尼斯世界纪录收录。</p>
+             <p>吉拉德总结道：“你真正爱你的顾客，他也会真心地爱你，进而买你的产品。”</p>
+             <p>而爱意的表达，需要的是心，需要的是你的注意力，而不是多少金钱。</p>
+             <p>这就是所谓的互悦机制：在人际交往中，人们总是根据对方的态度和行为，来采取相应的态度和行为。</p>
+             <p>在社会生活中，人们经常体验到，当自己想得到别人的好感时，而那个人也对自己有好感，于是就会对那个人更有好感。</p
+             ><p>相反，如果我们感觉到，对方对自己没有好感，甚至是讨厌，你同样也对对方没有好感，甚至是嫌恶。</p>
+             <p>这就是互悦机制，好感是相互的，讨厌也是相互的，喜欢和被喜欢是互为因果的。</p>
+             <p>正如《圣经》中提到：你希望他人如何待你，你就应该如何待人。</p>
+             <p>让人真切地感受到“喜欢”，才能让人以同样的方式喜欢你。</p>
+             <p>03</p>
+             <p>麦拉宾法则</p><p>电影《当幸福来敲门》中有这样一个情景：</p>
+             <p>男主角克里斯，因拖欠房东房租，只能免费帮房东装修房子。</p>
+             <p>装修之际，警察找上门来，因为他停车罚单未付清，将他抓到警局关了一个晚上。</p>
+             <p>不巧的是，第二天有个重要面试，克里斯只能从警局一路狂奔过去。</p>
+             <p>他来不及梳洗换上得体西服，只能穿着背心夹克，顶着石灰粉，出现在面试官面前。</p>
+             <p>面试官面露不悦：“克里斯，如果有个家伙连衬衫都没穿，就跑来参加面试，你会怎么想？如果我最后还雇了这个人，你会怎么想？”</p>
+             <p>克里斯稍稍迟疑几秒，带着有点紧张夹杂着调侃的语调道：“那他穿的裤子一定十分考究。”</p>
+             <p>面试官被克里斯的幽默所打动，最后录用了克里斯。</p>
+             <p>心理学上，有个麦拉宾法则，指的是：对一个人的印象，7％来自说的内容，38％来自语音语调，55％来自肢体语言。</p>
+             <p>其中，7%属于语言，例如，思想观点、表达句式等；</p>
+             <p>38%属于听觉，例如，语音语调、音质节奏等；</p>
+             <p>55%属于视觉，例如，外表装扮、表情仪态等。</p>
+             <p>写成公式就是：人际沟通 = 7%语言 + 38%听觉 + 55%视觉。</p>
+             <p>这给我们的启示是，我们在日常生活工作中，首先要经营好自己的个人形象（衣着、发型、妆容）。</p>
+             <p>同时，还要训练我们说话的方式、肢体语言以及梳理我们表达的逻辑性以及完整性。</p>
+             <p>04</p>
+             <p>自重感效应</p>
+             <p>富兰克林深谙为人处世之道，年轻时曾经发生过一个“请人帮忙”的故事。</p>
+             <p>一开始，他很不喜欢某个上流社会的富有人士，特别是那人的傲慢态度。</p>
+             <p>但由于那个人对众议院影响重大，他不想得罪对方，但他绝不愿低三下四地去乞求对方的帮助。</p>
+             <p>经过了解，他发现对方收藏了一本奇书，找到了一种策略。</p>
+             <p>富兰克林给那人写了一封信，诚恳地请求对方将那本已珍藏了多年的奇书借给他，说他尽快看完后会立马归还。</p>
+             <p>那人看完信后颇受感动，最终同意将书借出。富兰克林抓紧时间看完书后，立即将其归还，并向其致谢。</p>
+             <p>当他们再次见面时，那人态度大变，对富兰克林非常亲切友善。此后他们成了朋友，能够互相关心、帮助。</p>
+             <p>这就是自重感效应：一个人如果自重感被满足，反过来会认同重视他的人。</p>
+             <p>自重感指的是，觉得自己很重要。</p>
+             <p>心理学家弗洛伊德说过：“人一生最大的需求只有两个，一个是性需求，一个是被当成重要人物看待的自重感需求。”</p>
+             <p>如果能够恰当运用自重感效应，我们可以识别自身和别人的自重感需求，再对症下药，促进自我认知和提高沟通质量。</p>-->
+        </div>
+
+        <div class="userlike">
+            <div class="iconfont-title">&#xe73c;</div><span>3 <span>人收藏</span></span>
+        </div>
+        <div class="comment-user">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">评论</label>
+                    <div style="width: 100%;height: 10px"></div>
+                    <div class="layui-input-block">
+                        <textarea name="" id="comment" style="width: 400px;height: 100px;font-size: 15px" required lay-verify="required" placeholder="请发表你的看法" class="layui-textarea"></textarea>
+
+                    </div>
+                </div>
+                <div style="padding-left: 440px">
+
+                    <button type="button" onclick="toComment()" class="layui-btn layui-btn-radius layui-btn-normal">发 表</button>
+                </div>
+            </form>
+        </div>
+        <div class="article-comment">
+            <div class="comment-title">
+                <span style="float:left;width: 5px;height: 30px;background: #0cb5f5b5;margin-top: 5px;"></span>
+                <span>&nbsp;全部评论</span>
+                <span id="commentNum" style="font-size: 15px">0</span>
+                <span class="sort" style="font-size: 14px;margin-left:400px;cursor: pointer">按时间倒序</span>
+            </div>
+            <div class="comment-content">
+                <ul id="comments">
+                   <!-- <li>
+                        <div class="content-image">
+                            <img src="/image/QQ图片20191119175113.jpg" alt="" style="width: 48px; height: 48px;border-radius: 50%;">
+                        </div>
+                        <div class="content-right">
+                            <div>
+                                <div style="font-size: 16px; margin-bottom: 10px;margin-top: 5px;">收纳空白。</div>
+                                <div style="font-size: 14px;color: #064b57b8">2020-04-13 12:23:12</div>
+                            </div>
+                            <div style="width: 100%;height: 80px;padding-top: 15px;border-bottom: 1px solid #0c54603b;font-size: 15px">
+                                写的不错，很受用
+                            </div>
+                        </div>
+
+                    </li>
+                    <li>
+                        <div class="content-image">
+                            <img src="../image/QQ图片20191119175113.jpg" alt="" style="width: 48px; height: 48px;border-radius: 50%;">
+                        </div>
+                        <div class="content-right">
+                            <div>
+                                <div style="font-size: 16px; margin-bottom: 10px;margin-top: 5px;">收纳空白。</div>
+                                <div style="font-size: 14px;color: #064b57b8">2020-04-13 12:23:12</div>
+                            </div>
+                            <div style="width: 100%;height: 80px;padding-top: 15px;border-bottom: 1px solid #0c54603b;font-size: 15px">
+                                写的不错，很受用
+                            </div>
+                        </div>
+
+                    </li>-->
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <div class="article-right"></div>
+
+</div>
+<div style="clear: both"></div>
+<!--结尾-->
+<div class="end-zst">
+    <div class="info-zst-team">
+        <ul>
+            <li>关于我们&nbsp;&nbsp;|</li>
+            <li>联系我们&nbsp;&nbsp;|</li>
+            <li>加入我们&nbsp;&nbsp;|</li>
+            <li>门户网站&nbsp;&nbsp;|</li>
+            <li>关于帮助&nbsp;&nbsp;|</li>
+            <li>进入百度&nbsp;&nbsp;|</li>
+            <li>合作伙伴</li>
+        </ul>
+    </div>
+    <div class="info-zst-intro">
+        <div> ©2019-2020 山西农业大学文理学院信息与计算科学专业 / 趣读 / 晋ICP备20160908508号-1126 /</div>
+        <div>联系电话：15735342829 | WeChat:zstzs971126 像热爱生活一样热爱你</div>
+        <div>感谢大学四年老师们对我的教诲，感谢同学们对我的关怀。</div>
+        <div>起风了，唯有努力生存！</div>
+    </div>
+</div>
+</body>
+<script>
+    function toComment(){
+        var comment=$("#comment").val();
+        var userid=$("#id").val()
+        if(userid==""){
+            alert("请登录")
+        }else{
+            var id=$("#id").val()
+            var aid=$("#aid").val()
+            var myDate = new Date();
+            myDate.toLocaleDateString();     //获取当前日期
+            var mytime=myDate.toLocaleTimeString();     //获取当前时间
+
+            myDate.toLocaleString( );        //获取日期与时间
+            if(comment!=""){
+                $.ajax({
+                    url:"http://localhost:8088/toCreateComment",
+                    data:{
+                        comment:comment,
+                        aid:aid
+                    },
+                    type:"post",
+                    dataType:"json",
+                    success:function (e) {
+                        if(e.code==200){
+                            var count=$("#commentNum").text()
+                            var count1=count+1
+                            $("#commentNum").html(count1)
+                            $("#comments").append("<li>" +
+                                "<div class='content-image'>" +
+                                " <img src='/image/photo-default.jpg' alt='' style='width: 48px; height: 48px;border-radius: 50%;'>" +
+                                "</div>" +
+                                " <div class='content-right'>" +
+                                " <div>" +
+                                "<div style='font-size: 16px; margin-bottom: 10px;margin-top: 5px;'>"+e.user.nickname+"</div>" +
+                                "<div style='font-size: 14px;color: #064b57b8'>"+ myDate.toLocaleDateString()+"</div>" +
+                                " </div>" +
+                                " <div style='width: 100%;height: 80px;padding-top: 15px;border-bottom: 1px solid #0c54603b;font-size: 15px'>" +comment+"</div>" +
+                                "</div>" +
+                                "</li>")
+
+                        }
+                    }
+                })
+            }
+
+        }
+
+    }
+
+
+</script>
+</html>

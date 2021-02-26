@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>趣读 -- 生活充满乐趣</title>
+
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/iconfont.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/userPersonInfo.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="js/jquery-1.9.1.js"></script>
+    <script src="js/jquery.validate.js"></script>
+    <script src="/js/kindeditor/kindeditor-all.js"></script>
+    <script src="/js/kindeditor/kindeditor.js"></script>
+    <script src="/js/kindeditor/lang/zh-CN.js"></script>
+    <script>
+        $(function () {
+
+
+            $.ajax({
+                url:"http://localhost:8088/indexArticle",
+                data:{
+
+                },
+                type:"post",
+                dataType:"json",
+                success:function (e) {
+                    if(e.user!=null){
+                        $("#id").val(e.user.uid)
+                        $("#userInfo").css("display","block");
+                        $("#login").css("display","none");
+                        $("#reg").css("display","none");
+                        $("#userimage").attr("src",e.user.userImage);
+                    }
+                    var li="";
+                    var school="";
+                    var author="";
+                    for (var i=0;i<e.list.length;i++){
+                        li+= " <li class='content-list'>"+
+                            "<div class='content-list-title'>"+
+                            "<a href='userViewArticle?id="+e.list[i].aid+"' class='list-title-zst'>"+e.list[i].title+"</a>"+
+                            "</div>"+
+                            "<div class='content-list-main'>"+
+                            "<p class='main-article-info'>"+ e.list[i].aMain+"</p>"+
+                            "</div>"+
+                            "<div class='content-list-writer'>"+
+                            "<div class='article-writer'><a href='userbolg?id="+e.list[i].userid+"'><div class='iconfont-title-one'>&#xe67b;</div>"+e.list[i].nickname+"</a></div>"+
+                            "<div class='article-attention'><div class='iconfont-title'>&#xe60d;</div><div class='attention-number'>"+e.list[i].likeNumber+"</div></div>"+
+                            "<div class='article-attention'><div class='iconfont-title'>&#xe73c;</div><div class='attention-number'>"+e.list[i].viewNumber+"</div></div>"+
+                            "</div>"+
+                            "</li>"
+
+
+                    }
+                    $("#article-zst").append(li)
+                    for (var i=0;i<e.school.length;i++){
+                            school+="<li>"+e.school[i].college+"</li>"
+                    }
+                    $("#school").append(school)
+                    for(var i=0;i<e.users.length;i++){
+                        var a=""
+                        if(e.users[i].email=="1"){
+                            a="已关注"
+                        }else{
+                            a="关注"
+                        }
+                        author+="<li>" +
+                            " <div class='type-writer-photo'>" +
+                            "                        <img src='"+e.users[i].userImage+"' alt='' width='50px'; height='50px'>" +
+                            "                    </div>" +
+                            "                    <div class='type-writer-name'>" +
+                            "                        <span class='name-zst'>"+e.users[i].nickname+"</span>" +
+                            "                         <span class='name-number-zst'>" +
+                            "                             <span class='name-number'>"+e.users[i].phone+"</span>" +
+                            "                             <span class='name-number'>人喜欢</span>" +
+                            "                         </span>" +
+                            "                    </div>" +
+                            "                    <div class='type-writer-focus clicklike'  attr='"+e.users[i].uid+"'>" +a+
+                            "                    </div>" +
+                            "                </li>"
+                    }
+                    $("#author").append(author)
+                }
+            })
+        })
+
+    </script>
+    <script>
+        $(function(){
+            //关注作者
+            $("#author").on("click",".clicklike",function () {
+                var id=$("#id").val()
+                if(id==""){
+                    alert("请登录")
+                }else{
+                    var guan=$(this).html();
+                    var status=0;
+                    var that=this
+                    var userid=$(this).attr("attr");
+                    if(guan=="关注"){
+                        status=1
+                    }else{
+                        status=2
+                    }
+                    $.ajax({
+                        url:"http://localhost:8088/attentionAuthor",
+                        data:{
+                            status:status,
+                            uid:userid
+                        },
+                        type:"post",
+                        dataType:"json",
+                        success:function (e) {
+                            if(e.code=="200"){
+                                console.log(status)
+                                if(status==1){
+                                    $(that).html("已关注")
+                                }else{
+                                    $(that).html("关注")
+                                }
+                            }
+
+                        }
+                    })
+
+                }
+
+
+            })
+        })
+       //文章查看更多
+        var count=2;
+    function seeMore() {
+
+        var pageNum=count
+        var pageSize=10
+        console.log(pageSize)
+        console.log(pageNum)
+        console.log(count)
+        $.ajax({
+            url:"http://localhost:8088/findLimitArticle",
+            data:{
+                pageSize:pageSize,
+                pageNum:pageNum
+            },
+            type:"post",
+            dataType:"json",
+            success:function (e) {
+                if(e.code=="200"){
+                    count++;
+                    var li="";
+                    for (var i=0;i<e.list.length;i++){
+                        li+= " <li class='content-list'>"+
+                            "<div class='content-list-title'>"+
+                            "<a href='userViewArticle?id="+e.list[i].aid+"' class='list-title-zst'>"+e.list[i].title+"</a>"+
+                            "</div>"+
+                            "<div class='content-list-main'>"+
+                            "<p class='main-article-info'>"+ e.list[i].aMain+"</p>"+
+                            "</div>"+
+                            "<div class='content-list-writer'>"+
+                            "<div class='article-writer'><a href='userbolg?id="+e.list[i].userid+"'><div class='iconfont-title-one'>&#xe67b;</div>"+e.list[i].nickname+"</a></div>"+
+                            "<div class='article-attention'><div class='iconfont-title'>&#xe60d;</div><div class='attention-number'>"+e.list[i].likeNumber+"</div></div>"+
+                            "<div class='article-attention'><div class='iconfont-title'>&#xe73c;</div><div class='attention-number'>"+e.list[i].viewNumber+"</div></div>"+
+                            "</div>"+
+                            "</li>"
+
+
+                    }
+                    $("#article-zst").append(li)
+                }else{
+                    $("#article-zst").append(
+                        "<div class='not-more' style='width: 100%;height: 80px;line-height: 80px;text-align: center;'>暂无更多</div>"
+                    )
+                }
+            }
+        })
+
+    }
+    //换一批作者
+     var count1=2;
+    function changeAuthor() {
+
+        $.ajax({
+            url:"http://localhost:8088/findLimitAuthor",
+            data:{
+                pageSize:6,
+                pageNum:count1
+            },
+            type:"post",
+            dataType:"json",
+            success:function (e) {
+                if(e.code=="200"){
+                    count1++
+                    var author=""
+                    $("#author").empty()
+                    for(var i=0;i<e.users.length;i++){
+                        var a=""
+                        if(e.users[i].email=="1"){
+                            a="已关注"
+                        }else{
+                            a="关注"
+                        }
+                        author+="<li>" +
+                            " <div class='type-writer-photo'>" +
+                            "                        <img src='"+e.users[i].userImage+"' alt='' width='50px'; height='50px'>" +
+                            "                    </div>" +
+                            "                    <div class='type-writer-name'>" +
+                            "                        <span class='name-zst'>"+e.users[i].nickname+"</span>" +
+                            "                         <span class='name-number-zst'>" +
+                            "                             <span class='name-number'>"+e.users[i].phone+"</span>" +
+                            "                             <span class='name-number'>人喜欢</span>" +
+                            "                         </span>" +
+                            "                    </div>" +
+                            "                    <div class='type-writer-focus' >" +
+                            "                        <div class='iconfont-like'>&#xe605;</div>" +
+                            "                        <span class='clicklike' attr='"+e.users[i].uid+"'>"+a+"</span>" +
+                            "                        " +
+                            "                    </div>" +
+                            "                </li>"
+                    }
+                    $("#author").append(author)
+
+
+                }else{
+
+                }
+            }
+        })
+
+    }
+    //关注页面
+    function guanzhu() {
+        var id=$("#id").val()
+        console.log(id)
+        if(id==""){
+            alert("请登录")
+            return false;
+        }else{
+            window.location.href="userViewLike"
+        }
+    }
+    //消息页面
+    function xiaoxi() {
+        var id=$("#id").val()
+        console.log(id)
+        if(id==""){
+            alert("请登录")
+            return false;
+        }else{
+            window.location.href="userViewInfo"
+        }
+    }
+    //编写文章
+    function suibi() {
+        var id=$("#id").val()
+        console.log(id)
+        if(id==""){
+            alert("请登录")
+            return false;
+        }else{
+            window.location.href="userEditor"
+        }
+
+    }
+    //退出登录
+    function exit(){
+        $.ajax({
+            url:"http://localhost:8088/userExit",
+            data:{
+
+            },
+            type:"post",
+            dataType:"json",
+            success:function (e) {
+                if(e.code==200){
+                    window.location.href="userLogin"
+                }
+            }
+        })
+    }
+
+    //搜索
+    function search() {
+        var content=$("#search").val()
+        console.log(123)
+        if(content==""){
+
+        }else{
+            window.location.href="userSearch?id="+content
+        }
+    }
+
+    </script>
+
+</head>
+<body>
+<!--顶部导航栏-->
+<header class="head-title">
+    <div class="title-log">
+        <span>趣 读</span>
+    </div>
+    <input type="hidden" id="id">
+    <div class="title-middle">
+        <div class="middle-one">
+            <a href="index" class="tab1 cur">首页</a>
+            <a href="javascript:;" onclick="guanzhu()" class="tab1">关注</a>
+            <a href="javascript:;" onclick="xiaoxi()" class="tab1">消息</a>
+        </div>
+        <div class="middle-search">
+            <div class="search-form">
+
+                    <input type="text" id="search" class="search" name="search" placeholder="搜索">
+                    <a href="javascript:;" onclick="search()">
+                        <span class="iconfont">&#xe613;</span>
+                    </a>
+            </div>
+        </div>
+    </div>
+    <div class="title-login">
+        <div class="login-one" id="login">
+            <a href="/userLogin" >登陆</a>
+        </div>
+        <div class="login-one" id="reg">
+            <a href="/register">注册</a>
+        </div>
+
+        <div  id="userInfo" class="login-one-info" style="display: none">
+            <div class="user-photo">
+                <img id="userimage" src="/image/photo-default.jpg" alt="">
+                <img src="/image/向下.png" alt="">
+            </div>
+        </div>
+        <div class="login-write">
+            <a href="javascript:;" onclick="suibi()">随 笔</a>
+        </div>
+    </div>
+
+
+</header>
+<div style="clear: both;height: 58px"></div>
+<div class="hidden-userInfo-zst">
+    <a class="dropdown-zst" href="userbolg">
+        <div class="iconfont-userInfo">&#xe60c;</div>
+        我的主页
+    </a>
+    <a class="dropdown-zst" href="userPersonInfo">
+        <div class="iconfont-userInfo">&#xe665;</div>个人信息</a>
+    <a class="dropdown-zst" href="javascript:;" onclick="exit()">
+        <div class="iconfont-userInfo">&#xe608;</div>退出登陆</a>
+</div>
+<!--中间主体-->
+<div class="main-zst" style="display: block">
+    <!--左边推荐-->
+    <div class="main-left">
+        <!--轮播图-->
+        <div class="left-slideshow">
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner" style=" border-radius: 7px">
+                    <div class="carousel-item active">
+                        <img src="image/u1234.jpg" class="d-block w-100" alt="..."  height="280px"  >
+                    </div>
+                    <div class="carousel-item">
+                        <img src="image/u1235.jpg" class="d-block w-100" alt="..."  height="280px">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="image/u1236.jpg" class="d-block w-100" alt="..." height="280px" >
+
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+
+        <!--文章内容-->
+        <div class="left-content">
+            <ul id="article-zst">
+         <!--       <li class="content-list">
+                    <div class="content-list-title">
+                        <a href="" class="list-title-zst">像热爱生活一样热爱你</a>
+                    </div>
+                    <div class="content-list-main">
+                        <p class="main-article-info"> 这世间，人人都不完美，对与错本是常态，倘若我们去深究太多，计较太多，拿他人的错误来折磨自己，只会让自己烦恼心忧。 人活着，总有讨厌你的人，也总有你不喜欢的人。 既然是三观不同，走不到一起，就不必强融，默默远离便好，不必翻脸，让大家都不愉悦，彼此难堪，甚至是给自己树敌。这世间，人人都不完美，对与错本是常态，倘若我们去深究太多，计较太多，拿他人的错误来折磨自己，只会让自己烦恼心忧。</p>
+                    </div>
+                    <div class="content-list-writer">
+                        <div class="article-writer"><a href=""><div class="iconfont-title-one">&#xe67b;</div>。收纳空白</a></div>
+                        <div class="article-attention"><div class="iconfont-title">&#xe60d;</div><div class="attention-number">12</div></div>
+                        <div class="article-attention"><div class="iconfont-title">&#xe73c;</div><div class="attention-number">100</div></div>
+                    </div>
+                </li>-->
+
+            </ul>
+        </div>
+        <div class="see-more-zst">
+            <a href="javascript:;" onclick="seeMore()">查看更多</a>
+        </div>
+    </div>
+    </div>
+    <!--右边推荐栏-->
+    <div class="main-right">
+        <div class="right-type">
+            <div class="type-recommend"><div class="iconfont-type">&#xe60e;</div>分类推荐</div>
+            <ul id="school">
+          <!--     <li>编程</li>
+               <li>Java</li>
+               <li>社会</li>
+               <li>大数据</li>
+               <li>大数据</li>
+               <li>本地</li>
+               <li>Python</li>
+               <li>C++</li>
+               <li>动态</li>-->
+            </ul>
+        </div>
+        <div class="right-writer">
+            <div class="type-recommend">
+                <div class="iconfont-type">&#xe60e;</div>
+                <div style="float: left">推荐关注</div>
+                <a href="javascript:;" class="writer-change" onclick="changeAuthor()">
+                    <div class="iconfont-change">&#xe602;</div>
+                    换一批
+                </a>
+            </div>
+            <ul id="author">
+               <!-- <li>
+                    <div class="type-writer-photo">
+                        <img src="/image/bg.png" alt="" width="50px"; height="50px">
+                    </div>
+                    <div class="type-writer-name">
+                        <span class="name-zst">江南一点雨</span>
+                         <span class="name-number-zst">
+                             <span class="name-number">1000</span>
+                             <span class="name-number">人喜欢</span>
+                         </span>
+                    </div>
+                    <div class="type-writer-focus" >
+                        <a href="javascript:;" onclick="userLike()"><div class="iconfont-like">&#xe605;</div>
+                        关注
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div class="type-writer-photo">
+                        <img src="/image/bg.png" alt="" width="50px"; height="50px">
+                    </div>
+                    <div class="type-writer-name">
+                        <span class="name-zst">江南一点雨</span>
+                        <span class="name-number-zst">
+                             <span class="name-number">1000</span>
+                             <span class="name-number">人喜欢</span>
+                         </span>
+                    </div>
+                    <div class="type-writer-focus">
+                        <a href="" ><div class="iconfont-like">&#xe605;</div>
+                            关注
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div class="type-writer-photo">
+                        <img src="image/bg.png" alt="" width="50px"; height="50px">
+                    </div>
+                    <div class="type-writer-name">
+                        <span class="name-zst">江南一点雨</span>
+                        <span class="name-number-zst">
+                             <span class="name-number">1000</span>
+                             <span class="name-number">人喜欢</span>
+                         </span>
+                    </div>
+                    <div class="type-writer-focus">
+                        <a href="" ><div class="iconfont-like">&#xe605;</div>
+                            关注
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div class="type-writer-photo">
+                        <img src="image/bg.png" alt="" width="50px"; height="50px">
+                    </div>
+                    <div class="type-writer-name">
+                        <span class="name-zst">江南一点雨</span>
+                        <span class="name-number-zst">
+                             <span class="name-number">1000</span>
+                             <span class="name-number">人喜欢</span>
+                         </span>
+                    </div>
+                    <div class="type-writer-focus">
+                        <a href="" ><div class="iconfont-like">&#xe605;</div>
+                            关注
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div class="type-writer-photo">
+                        <img src="/image/bg.png" alt="" width="50px"; height="50px">
+                    </div>
+                    <div class="type-writer-name">
+                        <span class="name-zst">江南一点雨</span>
+                        <span class="name-number-zst">
+                             <span class="name-number">1000</span>
+                             <span class="name-number">人喜欢</span>
+                         </span>
+                    </div>
+                    <div class="type-writer-focus">
+                        <a href="" ><div class="iconfont-like">&#xe605;</div>
+                            关注
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div class="type-writer-photo">
+                        <img src="image/bg.png" alt="" width="50px"; height="50px">
+                    </div>
+                    <div class="type-writer-name">
+                        <span class="name-zst">江南一点雨</span>
+                        <span class="name-number-zst">
+                             <span class="name-number">1000</span>
+                             <span class="name-number">人喜欢</span>
+                         </span>
+                    </div>
+                    <div class="type-writer-focus">
+                        <a href="" ><div class="iconfont-like">&#xe605;</div>
+                            关注
+                        </a>
+                    </div>
+                </li>-->
+            </ul>
+        </div>
+    </div>
+</div>
+<!--结束-->
+<div style="clear: both"></div>
+
+<div class="end-zst">
+    <div class="info-zst-team">
+        <ul>
+            <li>关于我们&nbsp;&nbsp;|</li>
+            <li>联系我们&nbsp;&nbsp;|</li>
+            <li>加入我们&nbsp;&nbsp;|</li>
+            <li>门户网站&nbsp;&nbsp;|</li>
+            <li>关于帮助&nbsp;&nbsp;|</li>
+            <li>进入百度&nbsp;&nbsp;|</li>
+            <li>合作伙伴</li>
+        </ul>
+    </div>
+    <div class="info-zst-intro">
+        <div> ©2016-2020 山西农业大学文理学院信息与计算科学专业 / 趣读 / 晋ICP备20160908508号-1126 /</div>
+        <div>联系电话：15735342829 | WeChat:zstzs971126 像热爱生活一样热爱你！</div>
+        <div>感谢大学四年老师们对我的教诲，感谢同学们对我的关怀。</div>
+        <div>起风了，唯有努力生存！</div>
+    </div>
+</div>
+</body>
+</html>

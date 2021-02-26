@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zstao.mapper.UserRoleDao">
+    <resultMap id="Base" type="com.zstao.entity.UserRole">
+        <id column="urole_id" property="id"/>
+        <result column="role_id" property="roleId"/>
+        <result column="user_id" property="userId"/>
+        <result column="rname" property="rname"/>
+        <result column="nickname" property="nickname"/>
+        <result column="uname" property="name"/>
+        <result column="phone" property="phone"/>
+    </resultMap>
+
+    <select id="listUserRoles" resultMap="Base">
+        select user_role.urole_id,user_role.role_id,role.rname,user.nickname,user_role.user_id,user.uname,user.phone from user_role
+        join role on user_role.role_id=role.rid join user on user.uid=user_role.user_id
+    </select>
+
+    <select id="getUserRole" parameterType="Integer" resultMap="Base">
+        select user_role.urole_id,role.rname,user_role.role_id,user.nickname,user_role.user_id,user.uname,user.phone from user_role
+        join role on user_role.role_id=role.rid join user on user.uid=user_role.user_id
+        where urole_id=#{uroleId}
+    </select>
+    <select id="userRoleNumber" resultType="int">
+        select count(1) from user_role
+    </select>
+
+    <select id="listUserRoleInfo" parameterType="Integer" resultMap="Base">
+        select user_role.urole_id,user_role.role_id,role.rname,user.nickname,user_role.user_id,user.uname,user.phone from user_role
+        join role on user_role.role_id=role.rid join user on user.uid=user_role.user_id
+        where user_id=#{userId}
+    </select>
+    <select id="listRoleBeUsers" parameterType="Integer" resultMap="Base">
+        select user_role.urole_id,user_role.role_id,role.rname,user.nickname,user_role.user_id,user.uname,user.phone from user_role
+        join role on user_role.role_id=role.rid join user on user.uid=user_role.user_id
+        where role_id=#{roleId}
+    </select>
+
+    <delete id="deleteUserRole" parameterType="Integer">
+        delete from user_role where urole_id=#{uroleId}
+    </delete>
+
+    <insert id="saveUserRole" parameterType="com.zstao.entity.UserRole">
+        insert into user_role(role_id,user_id) values(#{roleId},#{userId})
+    </insert>
+
+    <select id="findRoleByAdmin" resultMap="Base">
+        select user_role.urole_id,user_role.role_id,role.rname,user.nickname,user_role.user_id,user.uname,user.phone from user_role
+        join role on user_role.role_id=role.rid join user on user.uid=user_role.user_id
+        where role_id !=2
+    </select>
+
+    <delete id="deleteRole" parameterType="Integer">
+        delete from user_role where user_id=#{user_id}
+    </delete>
+
+</mapper>

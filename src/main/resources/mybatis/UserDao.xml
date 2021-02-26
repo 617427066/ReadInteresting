@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zstao.mapper.UserDao">
+    <resultMap id="BaseUser" type="com.zstao.entity.User">
+        <id column="uid" jdbcType="INTEGER" property="uid" />
+        <result column="uname" jdbcType="VARCHAR" property="uname" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="age" jdbcType="DATE" property="age" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+        <result column="sex" jdbcType="VARCHAR" property="sex" />
+        <result column="introduce" jdbcType="VARCHAR" property="introduce" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="user_image" jdbcType="LONGVARBINARY" property="userImage" />
+        <result column="sch_id" jdbcType="VARCHAR" property="sch_id" />
+        <result column="zy_id" jdbcType="VARCHAR" property="zy_id" />
+        <result column="number" jdbcType="VARCHAR" property="number" />
+
+    </resultMap>
+    <sql id="Base_Column_List">
+        uid, `uname`, `password`, age,email, phone, nickname, sex, introduce, create_date,user_image
+    </sql>
+    <select id="listUsers" resultMap="BaseUser">
+        select * from user
+    </select>
+
+    <select id="getUser" parameterType="Integer" resultMap="BaseUser">
+        select
+        *
+        from user
+
+        where uid=#{uid};
+    </select>
+
+    <insert id="saveUser" keyColumn="uid" keyProperty="uid" parameterType="com.zstao.entity.User" useGeneratedKeys="true">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uname != null">
+                uname,
+            </if>
+            <if test="password != null">
+                `password`,
+            </if>
+            <if test="age != null">
+                age,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="nickname != null">
+                nickname,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="introduce != null">
+                introduce,
+            </if>
+            <if test="userImage != null">
+                user_image,
+            </if>
+            <if test="sch_id !=null">
+                sch_id,
+            </if>
+            <if test="zy_id !=null">
+                zy_id,
+            </if>
+            <if test="number !=null">
+                number,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uname != null">
+                #{uname,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                #{age,jdbcType=DATE},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="nickname != null">
+                #{nickname,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="introduce != null">
+                #{introduce,jdbcType=VARCHAR},
+            </if>
+            <if test="userImage != null">
+                #{userImage,jdbcType=VARCHAR},
+            </if>
+            <if test="sch_id != null">
+                #{sch_id,jdbcType=VARCHAR},
+            </if>
+            <if test="zy_id != null">
+                #{zy_id,jdbcType=VARCHAR},
+            </if>
+            <if test="number != null">
+                #{number,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+<!--   删除用户 -->
+    <delete id="deleteUser" parameterType="java.lang.Integer">
+        delete from user
+        where `uid` = #{uid,jdbcType=INTEGER}
+    </delete>
+
+<!--   更新 -->
+    <update id="updateUser" parameterType="com.zstao.entity.User">
+        update user
+        set uname = #{uname,jdbcType=VARCHAR},
+            `password` = #{password,jdbcType=VARCHAR},
+            age = #{age,jdbcType=DATE},
+            email = #{email,jdbcType=VARCHAR},
+            phone = #{phone,jdbcType=VARCHAR},
+            nickname = #{nickname,jdbcType=VARCHAR},
+            sex = #{sex,jdbcType=VARCHAR},
+            introduce = #{introduce,jdbcType=VARCHAR},
+            user_image = #{userImage,jdbcType=VARCHAR},
+            sch_id= #{sch_id,jdbcType=VARCHAR},
+            zy_id= #{zy_id, jdbcType=VARCHAR},
+            number=#{number,jdbcType=VARCHAR}
+        where `uid` = #{uid,jdbcType=INTEGER}
+    </update>
+
+<!--    查询用户数量-->
+    <select id="userNumber" resultType="int">
+        select count(*) from user;
+    </select>
+<!--用户登录-->
+    <select id="userVerify" parameterType="String" resultMap="BaseUser">
+        select * from user where phone=#{phone} and password=#{password}
+    </select>
+
+<!--    用户注册-->
+    <insert id="userRegister" parameterType="String">
+        insert into user(password,phone,nickname)
+        values(#{password},#{phone},#{nickname})
+    </insert>
+
+    <select id="getUserByPhone" parameterType="String" resultMap="BaseUser">
+        select * from user where phone=#{phone}
+    </select>
+
+    <select id="findByTime" parameterType="String" resultMap="BaseUser">
+        select * from user
+        where sch_id like '%${sch}%' or nickname like '%${sch}%';
+    </select>
+</mapper>

@@ -1,0 +1,89 @@
+@font-face {
+    font-family: 'iconfont';  /* project id 1594778 */
+    src: url('//at.alicdn.com/t/font_1594778_e033wq3msai.eot');
+    src: url('//at.alicdn.com/t/font_1594778_e033wq3msai.eot?#iefix') format('embedded-opentype'),
+    url('//at.alicdn.com/t/font_1594778_e033wq3msai.woff2') format('woff2'),
+    url('//at.alicdn.com/t/font_1594778_e033wq3msai.woff') format('woff'),
+    url('//at.alicdn.com/t/font_1594778_e033wq3msai.ttf') format('truetype'),
+    url('//at.alicdn.com/t/font_1594778_e033wq3msai.svg#iconfont') format('svg');
+}
+
+.iconfont-type{
+    /*margin-left: 10px;*/
+    font-family: "iconfont" !important;
+    font-size: 22px;
+    font-style: normal;
+    float: left;
+    margin-right: 5px;
+    color: #0086b3;
+}
+.iconfont-change{
+    font-family: "iconfont" !important;
+    font-size: 13px;
+    font-style: normal;
+    float: left;
+    margin-right: 5px;
+    color: #9ea9ad;
+}
+.iconfont-like{
+    width: 15px;
+    height: 15px;
+    padding-top: 1px;
+    font-family: "iconfont" !important;
+    font-size: 12px;
+    font-style: normal;
+    color: #2cb300d4;
+    float: left;
+}
+
+.iconfont-title{
+    width: 20px;
+    height: 20px;
+    padding-top: 1px;
+    font-family: "iconfont" !important;
+    font-size: 16px;
+    font-style: normal;
+    color: #908383;
+    float: left;
+}
+.iconfont-title-one{
+    width: 20px;
+    height: 20px;
+    padding-top: 1px;
+    font-family: "iconfont" !important;
+    font-size: 16px;
+    font-style: normal;
+    color: #0086b3;
+    float: left;
+}
+
+.iconfont{
+    width: 30px;
+    height: 30px;
+    padding-top: 10px;
+    font-family: "iconfont" !important;
+    font-size: 16px;
+    font-style: normal;
+    color: #f1e9e9;
+}
+
+.iconfont-userInfo{
+    width: 30px;
+    height: 30px;
+    float: left;
+    margin-left: 15px;
+    font-family: "iconfont" !important;
+    font-size: 16px;
+    font-style: normal;
+    color: #6ca2d8;
+}
+.iconfont-user-tabs-title{
+    width: 25px;
+    height: 30px;
+    float: left;
+    margin-left: 15px;
+    font-family: "iconfont" !important;
+    font-size: 16px;
+    font-style: normal;
+    color: #343e48c7;
+}

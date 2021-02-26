@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zstao.mapper.CommentDao">
+    <resultMap id="Base" type="com.zstao.entity.Comment">
+        <id column="cid" property="cid" />
+        <result column="article_id" property="articleId"/>
+        <result column="title" property="title"/>
+        <result column="c_main" property="cMain"/>
+        <result column="nickname" property="userId"/>
+        <result column="create_date" property="createDate"/>
+        <result column="status" property="status"/>
+    </resultMap>
+    <select id="listComments" resultMap="Base">
+        select comment.cid,article.title,comment.article_id,comment.c_main,user.nickname,comment.create_date,comment.status
+        from comment join user on comment.user_id=user.uid join article on article.aid=comment.article_id
+    </select>
+
+    <select id="listByStatus" parameterType="Integer" resultMap="Base">
+        select comment.cid,article.title,comment.article_id,comment.c_main,user.nickname,comment.create_date,comment.status
+        from comment join user on comment.user_id=user.uid join article on article.aid=comment.article_id
+        where comment.status=#{status}
+    </select>
+
+    <select id="getComment" parameterType="Integer" resultMap="Base">
+        select comment.cid,article.title,comment.article_id,comment.c_main,user.nickname,comment.create_date,comment.status
+        from comment join user on comment.user_id=user.uid join article on article.aid=comment.article_id
+        where cid=#{cid}
+    </select>
+
+    <select id="queryByUser" parameterType="Integer" resultMap="Base">
+        select comment.cid,article.title,comment.article_id,comment.c_main,user.nickname,comment.create_date,comment.status
+        from comment join user on comment.user_id=user.uid join article on article.aid=comment.article_id
+        where user_id=#{uid}
+    </select>
+    <select id="queryByArticle" parameterType="Integer" resultMap="Base">
+        select comment.cid,article.title,comment.article_id,comment.c_main,user.nickname,comment.create_date,comment.status
+        from comment join user on comment.user_id=user.uid join article on article.aid=comment.article_id
+        where article_id=#{aid}
+    </select>
+    <select id="commentNumber" resultType="int">
+        select count(*) from comment
+    </select>
+
+    <delete id="deleteComment" parameterType="Integer">
+        delete from comment where cid=#{cid}
+    </delete>
+
+    <insert id="saveComment" parameterType="com.zstao.entity.Comment">
+        insert into comment(article_id,c_main,user_id,status) values(#{articleId},#{cMain},#{userId},1)
+    </insert>
+
+
+</mapper>

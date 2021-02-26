@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zstao.mapper.ArticleTypeDao">
+    <resultMap id="Base" type="com.zstao.entity.ArticleType">
+        <id column="atype_id" property="atypeId"/>
+        <result column="type_name" property="typeName"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="listArticleTypes" resultMap="Base">
+        select atype_id,type_name,create_time from article_type
+    </select>
+    <select id="getArticleType" parameterType="Integer" resultType="String">
+        select type_name from article_type where atype_id=#{atypeId}
+    </select>
+
+<!--    查询数量-->
+    <select id="articleTypeNumber" resultType="int">
+        select count(*) from article_type
+    </select>
+
+    <insert id="saveArticleType" parameterType="com.zstao.entity.ArticleType">
+        insert into article_type(type_name) values(#{typeName})
+    </insert>
+
+    <update id="updateArticleType" parameterType="com.zstao.entity.ArticleType">
+        update article_type set type_name=#{typeName} where atype_id=#{atypeId}
+    </update>
+
+    <delete id="deleteArticleType" parameterType="Integer">
+        delete from article_type where atype_id=#{atypeId}
+    </delete>
+</mapper>

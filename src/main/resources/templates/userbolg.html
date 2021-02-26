@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户主页</title>
+    <link rel="stylesheet" href="/css/userpersoninfo.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/iconfont.css">
+    <link rel="stylesheet" href="/css/userbolg.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/userPersonInfo.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="/js/jquery-1.9.1.js"></script>
+    <script src="/js/jquery.validate.js"></script>
+    <script src="/js/userblog.js"></script>
+    <script src="/js/userSearch.js"></script>
+    <script>
+        $(function(){
+
+        })
+
+        //搜索
+        function search() {
+            var content=$("#search").val()
+            if(content==""){
+
+            }else{
+                window.location.href="userSearch?id="+content
+
+            }
+        }
+        //退出登录
+        function exit(){
+            $.ajax({
+                url:"http://localhost:8088/userExit",
+                data:{
+
+                },
+                type:"post",
+                dataType:"json",
+                success:function (e) {
+                    if(e.code==200){
+                        window.location.href="userLogin"
+                    }
+                }
+            })
+        }
+        function save() {
+            var content=$("#introduce").val()
+            if(content==""){
+
+            }else{
+                $.ajax({
+                    url:"http://localhost:8088/",
+                    data:{
+                        content:content
+                    },
+                    type:"post",
+                    dataType:"json",
+                    success:function (e) {
+                       alert(1)
+                    }
+                })
+            }
+        }
+
+    </script>
+</head>
+<body>
+//顶部导航栏
+<header class="head-title">
+    <div class="title-log">
+        <span>趣 读</span>
+    </div>
+    <input type="hidden" id="id">
+    <div class="title-middle">
+        <div class="middle-one">
+            <a href="index" class="tab1 cur">首页</a>
+            <a href="userViewLike" class="tab1">关注</a>
+            <a href="userViewInfo" class="tab1">消息</a>
+        </div>
+        <div class="middle-search">
+            <div class="search-form">
+                <form action="">
+                    <input type="text" class="search" name="search" id="search" placeholder="搜索">
+                    <a href="javascript:;" onclick="search()">
+                        <span class="iconfont">&#xe613;</span>
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="title-login">
+        <div class="login-one-info">
+            <div class="user-photo">
+                <img id="userimage" src="/image/photo-default.jpg" alt="">
+                <img src="/image/向下.png" alt="">
+            </div>
+        </div>
+        <div class="login-write">
+            <a href="userEditor">随 笔</a>
+        </div>
+    </div>
+</header>
+<div style="clear: both;height: 30px"></div>
+<div>
+    <div class="hidden-userInfo-zst">
+        <a class="dropdown-zst" href="userbolg">
+            <div class="iconfont-userInfo">&#xe60c;</div>
+            我的主页
+        </a>
+        <a class="dropdown-zst" href="userPersonInfo">
+            <div class="iconfont-userInfo">&#xe665;</div>个人信息</a>
+        <a class="dropdown-zst" href="javascript:;" onclick="exit()">
+            <div class="iconfont-userInfo">&#xe608;</div>退出登陆</a>
+    </div>
+</div>
+<div class="blog-main">
+    <div class="blog-main-left">
+        <div class="left-user-info">
+            <div class="info-image">
+                <img id="userimage2" src="/image/photo-default.jpg" alt="">
+            </div>
+            <div class="info-right">
+                <div class="info-right-name" id="nickname">
+                    像热爱生活一样热爱你
+                </div>
+                <div class="info-right-like">
+                    <ul>
+                        <li>
+                            <div class="user-info-number" id="like">10</div>
+                            <div class="user-info-name">关注&nbsp;></div>
+                        </li>
+                        <li>
+                            <div class="user-info-number" id="fensi">10</div>
+                            <div class="user-info-name">粉丝&nbsp;></div>
+                        </li>
+                        <li>
+                            <div class="user-info-number" id="article">10</div>
+                            <div class="user-info-name">文章&nbsp;></div>
+                        </li>
+                        <li>
+                            <div class="user-info-number" id="collent">10</div>
+                            <div class="user-info-name">收藏&nbsp;></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="left-user-main-tabs">
+            <div class="tabs-title">
+                <div class="title-first"><div class="iconfont-user-tabs-title">&#xe609;</div><div>文章</div></div>
+                <div class="title-first"><div class="iconfont-user-tabs-title">&#xe610;</div><div>动态</div></div>
+                <div class="title-first"><div class="iconfont-user-tabs-title">&#xe60f;</div><div>收藏</div></div>
+            </div>
+            <div class="tabs-main">
+                <div class="main-first first-article">
+                    <ul>
+                        <li>
+                            <div class="user-article-title">
+                                <div class="title"><a href="">致我们即将结束的美好！</a></div>
+                                <div class="see-number"><div class="iconfont-title">&#xe60d;</div><div class="attention-number">12</div></div>
+                                <div class="see-number"><div class="iconfont-title">&#xe73c;</div><div class="attention-number">100</div></div>
+                            </div>
+                            <div class="user-article-time">
+                                <div class="time first-time">发表时间：</div>
+                                <div class="date first-time">2020-01-12 20:30:12</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="user-article-title">
+                                <div class="title">致我们终将逝去的青春</div>
+                                <div class="see-number"><div class="iconfont-title">&#xe60d;</div><div class="attention-number">12</div></div>
+                                <div class="see-number"><div class="iconfont-title">&#xe73c;</div><div class="attention-number">100</div></div>
+                            </div>
+                            <div class="user-article-time">
+                                <div class="time first-time">发表时间：</div>
+                                <div class="date first-time">2020-01-12 20:30:12</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="user-article-title">
+                                <div class="title">让我们的友谊天长地久</div>
+                                <div class="see-number"><div class="iconfont-title">&#xe60d;</div><div class="attention-number">12</div></div>
+                                <div class="see-number"><div class="iconfont-title">&#xe73c;</div><div class="attention-number">100</div></div>
+                            </div>
+                            <div class="user-article-time">
+                                <div class="time first-time">发表时间：</div>
+                                <div class="date first-time">2020-01-12 20:30:12</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="user-article-title">
+                                <div class="title">文章标题</div>
+                                <div class="see-number"><div class="iconfont-title">&#xe60d;</div><div class="attention-number">12</div></div>
+                                <div class="see-number"><div class="iconfont-title">&#xe73c;</div><div class="attention-number">100</div></div>
+                            </div>
+                            <div class="user-article-time">
+                                <div class="time first-time">发表时间：</div>
+                                <div class="date first-time">2020-01-12 20:30:12</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="main-first" style="display: none">
+                    <ul>
+                        <li></li>
+                    </ul>
+                </div>
+                <div class="main-first" style="display: none">333</div>
+            </div>
+
+        </div>
+    </div>
+    <div class="blog-main-right">
+        <div class="right-user-introduce">
+            <div class="user-title">个人介绍</div>
+            <div class="user-introduce">
+                <textarea class="introduce" name="introduce" id="introduce" placeholder="这家伙很赖！"></textarea>
+                <button onclick="save()">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="clear: both"></div>
+<!--结尾-->
+<div class="end-zst">
+    <div class="info-zst-team">
+        <ul>
+            <li>关于我们&nbsp;&nbsp;|</li>
+            <li>联系我们&nbsp;&nbsp;|</li>
+            <li>加入我们&nbsp;&nbsp;|</li>
+            <li>门户网站&nbsp;&nbsp;|</li>
+            <li>关于帮助&nbsp;&nbsp;|</li>
+            <li>进入百度&nbsp;&nbsp;|</li>
+            <li>合作伙伴</li>
+        </ul>
+    </div>
+    <div class="info-zst-intro">
+        <div> ©2019-2020 山西农业大学文理学院信息与计算科学专业 / 趣读 / 晋ICP备20160908508号-1126 /</div>
+        <div>联系电话：15735342829 | WeChat:zstzs971126 像热爱生活一样热爱你</div>
+        <div>感谢大学四年老师们对我的教诲，感谢同学们对我的关怀。</div>
+        <div>起风了，唯有努力生存！</div>
+    </div>
+</div>
+</body>
+</html>

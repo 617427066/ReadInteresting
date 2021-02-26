@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人信息</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/userpersoninfo.css">
+    <link rel="stylesheet" href="/css/iconfont.css">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <script src="/lib/layui/layui.js"></script>
+    <script src="/js/userPersonInfo.js"></script>
+    <script src="/js/jquery-1.9.1.js"></script>
+    <script src="/js/jquery.validate.js"></script>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/userSearch.js"></script>
+    <script src="/js/userblog.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+</head>
+<script>
+
+
+</script>
+<script>
+    $(function () {
+        var query = window.location.search.substring(1);
+        var id = query.substring(3);
+        $("#id").val(id)
+        $.ajax({
+            url:"http://localhost:8088/queryUser",
+            data:{
+                id:id,
+            },
+            type:"post",
+            dataType:"json",
+            success:function (e) {
+                $("#id").val(e.user1.uid)
+                $("#userimage").attr("src",e.user1.userImage);
+                $("#nickname").val(e.user1.nickname)
+                $("#phone").val(e.user1.phone)
+                $("#email").val(e.user1.email)
+                $("#password").val(e.user1.password)
+                $("#introduce").val(e.user1.introduce)
+                $("#name").val(e.user1.uname)
+                $("#sex").val(e.user1.sex)
+                $("#number").val(e.user1.number)
+                $("#college").val(e.user1.sch_id)
+
+            }
+        })
+    })
+
+    function save() {
+        var nickname=$("#nickname").val()
+        var password=$("#password").val()
+        var email=$("#email").val()
+        var phone=$("#phone").val()
+        if(nickname==""){
+            alert("请填写昵称");
+            return false;
+        }else if (password==""){
+            alert("请填写密码");
+            return false;
+        }else if(email==""){
+            alert("请填写邮箱");
+            return false;
+        }else if(phone==""){
+            alert("请填写手机号");
+            return false;
+        }else{
+            $.ajax({
+                url:"http://localhost:8088/userUpdateInfo1",
+                data:{
+                    nickname:nickname,
+                    password:password,
+                    email:email,
+                    phone:phone
+                },
+                type:"post",
+                dataType:"json",
+                success:function (e) {
+                    if(e.code=="200"){
+                        alert("保存成功！")
+                    }else{
+                        alert("保存失败！")
+                    }
+                }
+            })
+
+        }
+    }
+
+    function saveInfo(){
+        var name=$("#name").val()
+        var introduce=$("#introduce").val()
+        var sex=$("#sex").val()
+        var number=$("#number").val()
+        var college=$("#college").val()
+        if(name==""){
+            alert("请填写用户名");
+            return false;
+        }else if (college==""){
+            alert("请填写学院");
+            return false;
+        }else if (number==""){
+            alert("请填写学号");
+            return false;
+        }else if(sex==""){
+            alert("请选择性别");
+            return false;
+        }else{
+            $.ajax({
+                url:"http://localhost:8088/userUpdateInfo2",
+                data:{
+                    name:name,
+                    introduce:introduce,
+                    sex:sex,
+                    number:number,
+                    college:college
+                },
+                type:"post",
+                dataType:"json",
+                success:function (e) {
+                    if(e.code=="200"){
+                        alert("保存成功！")
+                    }else{
+                        alert("保存失败！")
+                    }
+                }
+            })
+        }
+    }
+    function chongzhi1() {
+        $("#nickname").val("")
+        $("#password").val("")
+        $("#email").val("")
+        $("#phone").val("")
+    }
+    function chongzhi2() {
+        $("#name").val("")
+        $("#number").val("")
+        $("#college").val("")
+        $("#introduce").val("")
+        $("#sex").val("")
+    }
+
+    //搜索
+    function search() {
+        var content=$("#search").val()
+        if(content==""){
+
+        }else{
+
+            window.location.href="userSearch?id="+content
+
+        }
+    }
+    //退出登录
+    function exit(){
+        $.ajax({
+            url:"http://localhost:8088/userExit",
+            data:{
+
+            },
+            type:"post",
+            dataType:"json",
+            success:function (e) {
+                if(e.code==200){
+                    window.location.href="userLogin"
+                }
+            }
+        })
+    }
+
+</script>
+<body>
+    //顶部导航栏
+    <header class="head-title">
+    <div class="title-log">
+        <span>趣 读</span>
+    </div>
+    <div class="title-middle">
+        <div class="middle-one">
+            <a href="index" class="tab1 cur">首页</a>
+            <a href="userViewLike" class="tab1">关注</a>
+            <a href="userViewInfo" class="tab1">消息</a>
+        </div>
+        <input type="hidden" id="id">
+        <div class="middle-search">
+            <div class="search-form">
+                    <input type="text" id="search" class="search" name="search" placeholder="搜索">
+                    <a href="javascript:;" onclick="search()">
+                        <span class="iconfont">&#xe613;</span>
+                    </a>
+            </div>
+        </div>
+    </div>
+    <div class="title-login">
+        <div  id="userInfo" class="login-one-info">
+            <div class="user-photo">
+                <img id="userimage" src="/image/photo-default.jpg" alt="">
+                <img src="/image/向下.png" alt="">
+            </div>
+        </div>
+        <div class="login-write">
+            <a href="userEditor">随 笔</a>
+        </div>
+    </div>
+</header>
+    <div style="clear: both;height: 30px"></div>
+    <div>
+        <div class="hidden-userInfo-zst">
+            <a class="dropdown-zst" href="userbolg">
+                <div class="iconfont-userInfo">&#xe60c;</div>
+                我的主页
+            </a>
+            <a class="dropdown-zst" href="userPersonInfo">
+                <div class="iconfont-userInfo">&#xe665;</div>个人信息</a>
+            <a class="dropdown-zst" href="javascript:;" onclick="exit()">
+                <div class="iconfont-userInfo">&#xe608;</div>退出登陆</a>
+        </div>
+    </div>
+
+
+    <div class="main-search-info">
+        <!--    菜单-->
+        <div class="main-left-info">
+            <ul>
+                <li class="article-title" style="background: #d1dfdd54;">基本资料</li>
+                <li class="article-title" >个人信息</li>
+            </ul>
+        </div>
+        <!--    选项卡-->
+        <div class="main-right">
+            <div class="article-info layui-form">
+                <input type="hidden" id="id">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">昵&nbsp;&nbsp;称</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="nickname" name="name" required  lay-verify="required" placeholder="请输入昵称" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">密&nbsp;&nbsp;码</label>
+                        <div class="layui-input-block">
+                            <input type="password" id="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">邮&nbsp;&nbsp;箱</label>
+                        <div class="layui-input-block">
+                            <input type="email" id="email" name="email" required  lay-verify="required" placeholder="请输入电子邮箱" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">手机号</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="phone" name="phone" required  lay-verify="required" placeholder="请输入手机号" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" onclick="save()">保存</button>
+                            <button type="reset" class="layui-btn layui-btn-primary" onclick="chongzhi1()">重置</button>
+                        </div>
+                    </div>
+
+            </div>
+            <div class="article-info layui-form" style="display: none">
+                <div class="touxiang">
+                    <div></div>
+                </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">姓 名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="name" id="name" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">学&nbsp;&nbsp;院</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="college" name="name" required  lay-verify="required" placeholder="请输入学院" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">学&nbsp;&nbsp;号</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="number" name="name" required  lay-verify="required" placeholder="请输入学号" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">性 别</label>
+                    <div class="layui-input-block">
+                        <select name="sex" id="sex" lay-verify="">
+                            <option value="男">男</option>
+                            <option value="女">女</option>
+                        </select>
+                    </div>
+                </div>
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">简&nbsp;&nbsp;介</label>
+                        <div class="layui-input-block">
+                            <textarea id="introduce" name="introduce" placeholder="请输入内容" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" onclick="saveInfo()">立即提交</button>
+                            <button type="reset" class="layui-btn layui-btn-primary" onclick="chongzhi2()">重置</button>
+                        </div>
+                    </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <!--结尾-->
+    <div style="clear: both"></div>
+    <div class="end-zst">
+        <div class="info-zst-team">
+            <ul>
+                <li>关于我们&nbsp;&nbsp;|</li>
+                <li>联系我们&nbsp;&nbsp;|</li>
+                <li>加入我们&nbsp;&nbsp;|</li>
+                <li>门户网站&nbsp;&nbsp;|</li>
+                <li>关于帮助&nbsp;&nbsp;|</li>
+                <li>进入百度&nbsp;&nbsp;|</li>
+                <li>合作伙伴</li>
+            </ul>
+        </div>
+        <div class="info-zst-intro">
+            <div> ©2019-2020 山西农业大学文理学院信息与计算科学专业 / 趣读 / 晋ICP备20160908508号-1126 /</div>
+            <div>联系电话：15735342829 | WeChat:zstzs971126 像热爱生活一样热爱你</div>
+            <div>感谢大学四年老师们对我的教诲，感谢同学们对我的关怀。</div>
+            <div>起风了，唯有努力生存！</div>
+        </div>
+    </div>
+
+</body>
+<script>
+    //JavaScript代码区域
+    layui.use('element', function(){
+        var element = layui.element;
+    });
+</script>
+<script>
+    layui.use('form',function () {
+        var form=layui.form;
+    });
+</script>
+</html>
